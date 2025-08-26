@@ -1,0 +1,5 @@
+get
+curl http://127.0.0.1:5000/user/1
+
+post
+C:\Users\User>curl -X POST -H "Content-Type: application/json" -d "{\"command\": \"restudy\", \"password\": 123, \"userId\": 1}" "http://127.0.0.1:5000/restudy"

@@ -2,3 +2,7 @@ data/events.csv.zip
 data/item_properties_part1.csv
 data/item_properties_part2.csv
 data/category_tree.csv
+server/__pycache__/core.cpython-311.pyc
+server/data/collab_model.pickle
+server/data/xboost_items.pickle
+server/data/xboost_users.pickle
