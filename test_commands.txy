@@ -3,3 +3,7 @@ curl -u shop:password http://127.0.0.1:5000/user/1
 
 post
 C:\Users\User>curl -X POST -u shop:password -H "Content-Type: application/json" -d "{\"command\": \"restudy\", \"password\": 123, \"userId\": 1}" "http://127.0.0.1:5000/restudy"
+
+docker build --no-cache -t recomendation_server:latest ..\server 
+
+docker run -it --restart always -p 8000:8000 -p 5000:5000 recomendation_server

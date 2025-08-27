@@ -11,6 +11,8 @@ from surprise import Reader
 base_dir = Path(__file__).resolve().parent
 print(base_dir)
 
+error_counter = 0
+
 file_path_os = os.path.join(base_dir, "data", "xboost_items.pickle")
 file_path_os_2 = os.path.join(base_dir, "data", "collab_model.pickle")
 
@@ -36,11 +38,11 @@ def matching(user, model=model):
 
 def restudy():
     try:
-        events = pd.read_csv('data\events.csv.zip')
+        events = pd.read_csv('data/events.csv.zip')
         events.drop_duplicates(inplace=True)
         
-        item_properties_1 = pd.read_csv('data\item_properties_part1.csv')
-        item_properties_2 = pd.read_csv('data\item_properties_part2.csv')
+        item_properties_1 = pd.read_csv('data/item_properties_part1.csv')
+        item_properties_2 = pd.read_csv('data/item_properties_part2.csv')
         item_properties =pd.concat([item_properties_1, item_properties_2], axis=0)
         item_properties = item_properties[item_properties['property']=='categoryid'][['itemid', 'value']]
         item_properties.drop_duplicates(inplace=True)
@@ -67,7 +69,7 @@ def restudy():
         items.value_3=items.value_3.astype(int)
         
         items.fillna(-1, inplace=True)  
-        category_tree = pd.read_csv('data\category_tree.csv')
+        category_tree = pd.read_csv('data/category_tree.csv')
         
         items_0 = items.merge(category_tree, left_on='value_0', right_on='categoryid', how='left', suffixes=('_0', '_1')).drop('categoryid', axis=1)
         items_1 = items_0.merge(category_tree, left_on='value_1', right_on='categoryid', how='left', suffixes=('_1', '_2')).drop('categoryid', axis=1)
@@ -196,4 +198,5 @@ def restudy():
         
         return 'restudy completed'
     except BaseException:
+        error_counter += 1
         return 'error occured'
