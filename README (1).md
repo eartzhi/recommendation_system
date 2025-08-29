@@ -236,23 +236,30 @@
 Был создан докер контейнер на основе образа python:3.12
 
 ```dockerfile
-FROM python:3.12
+FROM python:3.11.13
 
-WORKDIR /usr/src/server/
-COPY . .
+LABEL "maintainer"="eartzhi" \
+      "app"="recomendation_server" \
+      "version"="1.0"
 
-ENV SERVER_USER=shop
-ENV PASSWORD=password
+COPY . /app
+WORKDIR /app
+
+ENV SERVER_USER="shop"
+ENV PASSWORD="password"
+ENV RES_PASSWORD=123
 
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
-CMD [ "python", "server.py" ]
 
-EXPOSE 8000
+
+ENTRYPOINT ["python"]
+CMD ["server.py" ]
+
 EXPOSE 5000
 
-VOLUME .data .data
+VOLUME ./data:app/data
 ```
 
 VOLUME .data .data
@@ -262,13 +269,16 @@ ENV SERVER_USER=shop
 ENV PASSWORD=password
 Переменные окружения для определения имени пользователя и пароля для обращения к API рекомендательной системы. При необходимости значения переменных можно изменить.
 
+ENV RES_PASSWORD=123
+Переменная окружения для определения пароля для озапроса переобучения модели рекомендательной системы. При необходимости значение переменной можно изменить.
+
 Остальные параметры изменять не рекомендуется.
 
 Сборка образа осуществляется командой:
-docker build --no-cache -t recomendation_server:latest ..\server 
+docker build --no-cache -t recomendation_server ..\server  
 
 Запуск командой:
-docker run -it --restart always -p 8000:8000 -p 5000:5000 recomendation_server
+docker run --name recomendation_server -it --restart always -p 5000:5000 recomendation_server:latest
 
 :arrow_up:[к оглавлению](#оглавление)
 
@@ -293,7 +303,7 @@ curl -u shop:password http://<HostIP>:5000/user/1
 
 При неуспешной авторизации пользователя API вернет json {'error': 'Unauthorized access'}
 
-Порт http://<HostIP>:8000 предназначен для съема метрик через Prometheus
+Адрес http://<HostIP>::5000/metrics предназначен для съема метрик через Prometheus
 metric_request_counter('requests', 'count of outer requests for prediction') - количество запросов пользователей;
 metric_learning_counter('learning', 'count of outer requests for learning') - количество запусков переобучения;
 metric_error_counter('error', 'count of errors in lerning') - количество ошибок при обучении;
