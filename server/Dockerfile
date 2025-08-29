@@ -1,18 +1,26 @@
-FROM python:3.12
+FROM python:3.11.13
 
-WORKDIR /usr/src/server/
-COPY . .
+LABEL "maintainer"="eartzhi" \
+      "app"="recomendation_server" \
+      "version"="1.0"
 
-ENV SERVER_USER=shop
-ENV PASSWORD=password
+COPY . /app
+WORKDIR /app
+
+ENV SERVER_USER="shop"
+ENV PASSWORD="password"
+ENV RES_PASSWORD=123
 
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
-CMD [ "python", "server.py" ]
 
-EXPOSE 8000
+
+ENTRYPOINT ["python"]
+CMD ["server.py" ]
+
+# EXPOSE 8000
 EXPOSE 5000
 
-VOLUME .data .data
+VOLUME ./data:app/data
 

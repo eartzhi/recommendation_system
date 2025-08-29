@@ -2,18 +2,25 @@ import os
 
 from flask import Flask, jsonify, abort, make_response, request
 from flask_httpauth import HTTPBasicAuth
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from core import matching, restudy, error_counter
-from prometheus_client import Gauge, start_http_server, Histogram, Counter
+from prometheus_client import Gauge, make_wsgi_app, Histogram, Counter
 
 app = Flask(__name__)
 
-start_http_server(8000)
+app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {'/metrics': make_wsgi_app()})
 
 auth = HTTPBasicAuth()
+
+# print(os.getenv("SERVER_USER"), os.getenv("PASSWORD"))
 
 users = {
     os.getenv("SERVER_USER"): os.getenv("PASSWORD"),
 }
+
+# users = {
+#     'shop': 'password',
+# }
 
 class Collector:
     def __init__(self, ):
@@ -34,12 +41,13 @@ class Collector:
 collector = Collector()
 request_counter = 0
 learning_counter = 0
-
+# items = [1,2,3]
 
 @collector.metric_request_time.time()
 @app.route('/user/<int:userid>', methods=['GET'])
 @auth.login_required
 def get_task(userid):
+    global request_counter
     if type(userid) is int:
         request_counter += 1
         items = list(matching(userid).itemid)
@@ -54,7 +62,8 @@ def get_task(userid):
 @app.route('/restudy', methods=['POST'])
 @auth.login_required
 def create_task():
-    if request.json['command'] == 'restudy' and request.json['password'] == 123:
+    global learning_counter
+    if request.json['command'] == 'restudy' and request.json['password'] == os.getenv("RES_PASSWORD"):
         learning_counter += 1
         task = restudy()
     else:
@@ -77,4 +86,4 @@ def unauthorized():
     return make_response(jsonify({'error': 'Unauthorized access'}), 401)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
