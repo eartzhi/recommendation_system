@@ -1,0 +1,11 @@
+get
+curl -u shop:password http://127.0.0.1:5000/user/1
+curl -u http://127.0.0.1:5000/metrics
+
+post
+curl -X POST -u shop:password -H "Content-Type: application/json" -d "{\"command\": \"restudy\", \"password\": 123}" "http://127.0.0.1:5000/restudy"
+
+docker
+docker build --no-cache -t recomendation_server ..\server 
+
+docker run --name recomendation_server --memory=16g  --storage-opt size=20GB -it --restart always -p 5000:5000 recomendation_server:latest

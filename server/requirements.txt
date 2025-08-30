@@ -1,0 +1,7 @@
+numpy==1.26.4
+pandas
+scikit-surprise
+xgboost
+Flask
+Flask-HTTPAuth
+prometheus_client
