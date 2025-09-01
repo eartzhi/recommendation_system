@@ -4,7 +4,7 @@ import pickle
 import os
 from pathlib import Path
 
-from surprise import KNNWithMeans, KNNBasic, SVD
+from surprise import SVD
 from surprise import Dataset
 from surprise import Reader
 
@@ -13,8 +13,8 @@ base_dir = Path(__file__).resolve().parent
 
 error_counter = 0
 
-items_path = os.path.join(base_dir, "data", "xboost_items.pickle")
-model_path = os.path.join(base_dir, "data", "collab_model.pickle")
+items_path = os.path.join(base_dir, "data", "items_unique.pickle")
+model_path = os.path.join(base_dir, "data", "matrix_model.pickle")
 
 with open(items_path, 'rb') as f:
     items = pickle.load(f)
@@ -26,14 +26,34 @@ def matching(user, model=model):
     users_list =[]
     items_list =[]
     score_list =[]
-    for it in items.itemid.unique():
+    for it in items:
         prediction = model.predict(user, it)
         users_list.append(prediction[0])
         items_list.append(prediction[1])
         score_list.append(prediction[3])
     return pd.DataFrame({'visitorid': users_list, 'itemid': items_list, 'score': score_list}).nlargest(3, 'score')
 
-def restudy():
+
+def relearning(parameters):
+    global model
+    try:
+        datapath = os.path.join(base_dir, "data", "matrix_dataset.pickle")
+        with open(datapath, 'rb') as f:
+            data = pickle.load(f)
+            
+        trainset = data.build_full_trainset()
+        
+        new_model = SVD(**parameters)
+        new_model.fit(trainset)
+        model = new_model
+        return 'relearning completed'
+    
+    except BaseException as err:
+        error_counter += 1
+        return str(err)
+
+
+def reassemble():
     global error_counter
     try:
         events_path = os.path.join(base_dir, "data", "events.csv.zip")

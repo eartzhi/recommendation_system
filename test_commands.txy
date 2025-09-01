@@ -3,7 +3,7 @@ curl -u shop:password http://127.0.0.1:5000/user/1
 curl -u http://127.0.0.1:5000/metrics
 
 post
-curl -X POST -u shop:password -H "Content-Type: application/json" -d "{\"command\": \"restudy\", \"password\": 123}" "http://127.0.0.1:5000/restudy"
+curl -X POST -u shop:password -H "Content-Type: application/json" -d "{\"command\": \"relearning\", \"password\": 123, \"parameters\": {\"n_epochs\": 10, \"lr_all\": 0.005, \"reg_all\": 0.4}}" "http://127.0.0.1:5000/relearning"
 
 docker
 docker build --no-cache -t recomendation_server ..\server 

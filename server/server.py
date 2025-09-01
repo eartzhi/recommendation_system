@@ -3,8 +3,8 @@ import os
 from flask import Flask, jsonify, abort, make_response, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from core import matching, restudy, error_counter
-from prometheus_client import Gauge, make_wsgi_app, Histogram, Counter
+from core import matching, relearning, error_counter
+from prometheus_client import make_wsgi_app, Histogram, Counter
 
 app = Flask(__name__)
 
@@ -22,6 +22,7 @@ users = {
 #     'shop': 'password',
 # }
 
+
 class Collector:
     def __init__(self, ):
         self.metric_request_counter = Counter('requests', 'count of outer requests for prediction')
@@ -32,7 +33,7 @@ class Collector:
         self.metric_learning_time = Histogram('learning_processing_seconds',
                        'Time spent learning request')
 
-    def collect_info(self, accuracy, f1, precision, recall, sample_count):
+    def collect_info(self, request_counter, learning_counter, error_counter):
         self.metric_request_counter.set(request_counter)
         self.metric_learning_counter.set(learning_counter)
         self.metric_error_counter.set(error_counter)
@@ -42,6 +43,8 @@ collector = Collector()
 request_counter = 0
 learning_counter = 0
 # items = [1,2,3]
+
+collector.collect_info(request_counter, learning_counter, error_counter)
 
 @collector.metric_request_time.time()
 @app.route('/user/<int:userid>', methods=['GET'])
@@ -59,13 +62,13 @@ def get_task(userid):
 
 
 @collector.metric_learning_time.time()
-@app.route('/restudy', methods=['POST'])
+@app.route('/relearning', methods=['POST'])
 @auth.login_required
 def create_task():
     global learning_counter
     if request.json['command'] == 'restudy' and request.json['password'] == os.getenv("RES_PASSWORD"):
         learning_counter += 1
-        task = restudy()
+        task = relearning(request.json['parameters'])
     else:
         abort(400)
     return jsonify({'result': task}), 200
