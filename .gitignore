@@ -2,7 +2,6 @@ data/events.csv.zip
 data/item_properties_part1.csv
 data/item_properties_part2.csv
 data/category_tree.csv
-<<<<<<< HEAD
 collab_dataset.pickle
 collab_model.pickle
 items.pickle
@@ -12,7 +11,6 @@ users.pickle
 xboost_model.pickle
 fact_model.pickle
 fact_pivot.pickle
-=======
 server/__pycache__/core.cpython-311.pyc
 server/data/collab_model.pickle
 server/data/xboost_items.pickle
@@ -21,4 +19,4 @@ server/data/category_tree.csv
 server/data/events.csv.zip
 server/data/item_properties_part1.csv
 server/data/item_properties_part2.csv
->>>>>>> d2df65446c4c39f8325085957e5821220b07f4e4
+

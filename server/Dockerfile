@@ -1,8 +1,8 @@
 FROM python:3.11.13
 
-LABEL "maintainer"="eartzhi" \
-      "app"="recomendation_server" \
-      "version"="1.0"
+# LABEL "maintainer"="eartzhi" \
+#       "app"="recomendation_server" \
+#       "version"="0.91"
 
 COPY . /app
 WORKDIR /app
@@ -15,12 +15,10 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 
-
-ENTRYPOINT ["python"]
-CMD ["server.py" ]
+CMD ["python", "server.py" ]
 
 # EXPOSE 8000
 EXPOSE 5000
 
-VOLUME ./data:app/data
+# VOLUME ./data app/data
 

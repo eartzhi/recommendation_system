@@ -4,7 +4,7 @@ from flask import Flask, jsonify, abort, make_response, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from core import matching, relearning, error_counter
-from prometheus_client import make_wsgi_app, Histogram, Counter
+from prometheus_client import make_wsgi_app, Histogram, Gauge
 
 app = Flask(__name__)
 
@@ -25,9 +25,9 @@ users = {
 
 class Collector:
     def __init__(self, ):
-        self.metric_request_counter = Counter('requests', 'count of outer requests for prediction')
-        self.metric_learning_counter = Counter('learning', 'count of outer requests for learning')
-        self.metric_error_counter = Counter('error', 'count of errors in lerning')
+        self.metric_request_counter = Gauge('requests', 'count of outer requests for prediction')
+        self.metric_learning_counter = Gauge('learning', 'count of outer requests for learning')
+        self.metric_error_counter = Gauge('error', 'count of errors in lerning')
         self.metric_request_time = Histogram('request_processing_seconds',
                        'Time spent processing request')
         self.metric_learning_time = Histogram('learning_processing_seconds',
