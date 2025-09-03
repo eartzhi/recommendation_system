@@ -1,4 +1,4 @@
-# Итоговый проект. “Определение уязвимых групп населения”
+# Дипломный проект. “Рекомендательная система”
 
 ## Оглавление   
 [1. Постановка задачи](#1-постановка-задачи)   
@@ -21,7 +21,9 @@
 :arrow_up:[к оглавлению](#оглавление)
 
 
-### 2. Формат исходных данных    
+### 2. Формат исходных данных
+
+[Исходные данные](http://example.com/https://drive.google.com/drive/folders/1_87paoN6Kll-oPM-pkbrkSqDj6UnzbNm?usp=sharing "Ссылка для скачивания данных")    
 
 Исходные данные предсталены четыремя фалами с набором данных:
 *events.csv* - набор событий
@@ -167,6 +169,7 @@
 ### 5. Эксперименты:  
 
 В рамках данной работы было проведено 4 эксперимента:
+
 #### 5.1 Коллаборативная фильтрация
 
 Для модели KNNWithMeans из библиотеки surprice были проведены эксперрименты на следующей выборке гиперпараметров:
@@ -224,7 +227,7 @@
 
 Наилучший результат был достигнут при конфигурации {'n_epochs': 10, 'lr_all': 0.005, 'reg_all': 0.4, 'random_state': 42}
 
-Метрика Presission@3:  0.0
+Метрика Presission@3:  0.004452840372419377
 
 В работу принимаем модель на основе SVD из библиотеки surprice
 
@@ -233,43 +236,39 @@
 
 ### 6. Создание Docker образа
 
-Был создан докер контейнер на основе образа python:3.12
+Был создан докер контейнер на основе образа python:3.11.13
+
+**Внимание! Для стабильной работы требуется не менее 32Гб оперативной памяти.**
 
 ```dockerfile
 FROM python:3.11.13
 
 LABEL "maintainer"="eartzhi" \
       "app"="recomendation_server" \
-      "version"="1.0"
+      "version"="0.91"
 
 COPY . /app
 WORKDIR /app
 
 ENV SERVER_USER="shop"
 ENV PASSWORD="password"
-ENV RES_PASSWORD=123
+ENV RES_PASSWORD="password2"
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 
+CMD ["python", "server.py" ]
 
-ENTRYPOINT ["python"]
-CMD ["server.py" ]
 
 EXPOSE 5000
-
-VOLUME ./data:app/data
 ```
-
-VOLUME .data .data
-При необходимости монтажа папки data, в которой находятся исходные датасеты и исходная модоль обучения можно примонтровать к папке data текущего местоположения. В противном случае строку можно закомментировать.
 
 ENV SERVER_USER=shop
 ENV PASSWORD=password
 Переменные окружения для определения имени пользователя и пароля для обращения к API рекомендательной системы. При необходимости значения переменных можно изменить.
 
-ENV RES_PASSWORD=123
+ENV RES_PASSWORD=password2
 Переменная окружения для определения пароля для озапроса переобучения модели рекомендательной системы. При необходимости значение переменной можно изменить.
 
 Остальные параметры изменять не рекомендуется.
@@ -278,7 +277,11 @@ ENV RES_PASSWORD=123
 docker build --no-cache -t recomendation_server ..\server  
 
 Запуск командой:
-docker run --name recomendation_server -it --restart always -p 5000:5000 recomendation_server:latest
+docker run --name recomendation_server -it --memory-swap=-1 --restart always -p 5000:5000 recomendation_server:latest
+
+При необходимости корректировать модель образ можно запускать командой:
+docker run --name recomendation_server -it -v "<path>:/app/data" --memory-swap=-1 --restart always -p 5000:5000 recomendation_server:latest
+path-путь к монтируемой папке на хост машине.
 
 :arrow_up:[к оглавлению](#оглавление)
 
@@ -298,6 +301,7 @@ docker run --name recomendation_server -it --restart always -p 5000:5000 recomen
 curl -u shop:password http://<HostIP>:5000/user/1
 
 
+**Внимание! Для стабильной работы функции переобучения требуется не менее 64Гб оперативной памяти.**
 По запросу POST http://<HostIP>:5000/relearning с передачей параметров {"command": "relearning", "password": 123, "parameters": <parameters>} произойдет переобучение модели на данных имеющихся в папке .data при заданных параметрах.
 При завершени обучения с ошибкой API вернет json с описанием ошибки {'result': <error_text>}
 

@@ -3,7 +3,7 @@ import os
 from flask import Flask, jsonify, abort, make_response, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from core import matching, relearning, error_counter
+from core import matching, relearning, error_counter, users, top_products
 from prometheus_client import make_wsgi_app, Histogram, Gauge
 
 app = Flask(__name__)
@@ -18,9 +18,7 @@ users = {
     os.getenv("SERVER_USER"): os.getenv("PASSWORD"),
 }
 
-# users = {
-#     'shop': 'password',
-# }
+
 
 
 class Collector:
@@ -53,7 +51,10 @@ def get_task(userid):
     global request_counter
     if type(userid) is int:
         request_counter += 1
-        items = list(matching(userid).itemid)
+        if userid in users:
+            items = top_products
+        else:
+            items = list(matching(userid).itemid)
     else:
         abort(404)
     return jsonify({'itemid_1': items[0],

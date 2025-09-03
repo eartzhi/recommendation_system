@@ -14,13 +14,22 @@ base_dir = Path(__file__).resolve().parent
 error_counter = 0
 
 items_path = os.path.join(base_dir, "data", "items_unique.pickle")
+users_path = os.path.join(base_dir, "data", "items_unique.pickle")
 model_path = os.path.join(base_dir, "data", "matrix_model.pickle")
+top_products_path = os.path.join(base_dir, "data", "top_3_products.pickle")
 
 with open(items_path, 'rb') as f:
     items = pickle.load(f)
     
 with open(model_path, 'rb') as f:
     model = pickle.load(f)
+    
+with open(users_path, 'rb') as f:
+    users = pickle.load(f)
+
+with open(top_products_path, 'rb') as f:
+    top_products = pickle.load(f)
+
     
 def matching(user, model=model):
     users_list =[]

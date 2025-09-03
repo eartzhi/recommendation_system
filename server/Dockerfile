@@ -9,7 +9,7 @@ WORKDIR /app
 
 ENV SERVER_USER="shop"
 ENV PASSWORD="password"
-ENV RES_PASSWORD=123
+ENV RES_PASSWORD="password2"
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
@@ -17,8 +17,7 @@ RUN pip install -r requirements.txt
 
 CMD ["python", "server.py" ]
 
-# EXPOSE 8000
-EXPOSE 8000
 
-# VOLUME ./data app/data
+EXPOSE 5000
+
 
