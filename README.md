@@ -205,8 +205,6 @@
     'n_estimators': [100, 200, 300],
     'learning_rate': [0.01, 0.05, 0.1],
     'max_depth': [3, 5, 7],
-    # 'subsample': [0.7, 0.8, 0.9],
-    # 'colsample_bytree': [0.7, 0.8, 0.9], 
     'random_state':[42],
     'enable_categorical':[True]
     
@@ -290,9 +288,9 @@ path-путь к монтируемой папке на хост машине.
 
 По запросу GET http://HostIP:5000/user/<userid>  
 выдается ответ в формате json следующего содержания:   
-    {'itemid_1': itemid,  
+     'itemid_1': itemid,  
      'itemid_2': itemid,  
-     'itemid_3': itemid}  
+     'itemid_3': itemid
 Где значения параметров itemid_1...itemid_3 это id товаров, рекомендованых пользователю с запрашиваемым id.  
 При отсутствии информации сервер вернет json {'error': 'Not found'}.  
 
@@ -308,7 +306,7 @@ curl -u shop:password http://HostIP:5000/user/1
 При неуспешной авторизации пользователя API вернет json {'error': 'Unauthorized access'}  
 
 
-Адрес http://HostIP::5000/metrics предназначен для съема метрик через Prometheus  
+Адрес http://HostIP:5000/metrics предназначен для съема метрик через Prometheus  
 metric_request_counter('requests', 'count of outer requests for prediction') - количество запросов пользователей;  
 metric_learning_counter('learning', 'count of outer requests for learning') - количество запусков переобучения;  
 metric_error_counter('error', 'count of errors in lerning') - количество ошибок при обучении;  
