@@ -10,4 +10,6 @@ docker build --no-cache -t recomendation_server ..\server
 
 docker run --name recomendation_server --memory=16g  --storage-opt size=20GB -it --restart always -p 5000:5000 recomendation_server:latest
 
-docker run --name recomendation_server -it -v "$PWD/data:/app/data" --restart always -p 5000:5000 recomendation_server:latest
+docker run --name recomendation_server -it -v "C:\Users\User\Desktop\data:/app/data" --restart always -p 5000:5000 recomendation_server:latest
+
+docker save recomendation_server:latest > recomendation_server.tar
