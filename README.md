@@ -280,7 +280,7 @@ docker build --no-cache -t recomendation_server ..\server
 docker run --name recomendation_server -it --memory-swap=-1 --restart always -p 5000:5000 recomendation_server:latest  
 
 При необходимости корректировать модель образ можно запускать командой:  
-docker run --name recomendation_server -it -v "<path>:/app/data" --memory-swap=-1 --restart always -p 5000:5000 recomendation_server:latest  
+docker run --name recomendation_server -it -v "path:/app/data" --memory-swap=-1 --restart always -p 5000:5000 recomendation_server:latest  
 path-путь к монтируемой папке на хост машине.  
 
 :arrow_up:[к оглавлению](#оглавление)
@@ -288,27 +288,27 @@ path-путь к монтируемой папке на хост машине.
 
 ### 7. API
 
-По запросу GET http://<HostIP>:5000/user/<userid>  
+По запросу GET http://HostIP:5000/user/<userid>  
 выдается ответ в формате json следующего содержания:   
-    {'itemid_1': <itemid>,  
-     'itemid_2': <itemid>,  
-     'itemid_3': <itemid>}  
+    {'itemid_1': itemid,  
+     'itemid_2': itemid,  
+     'itemid_3': itemid}  
 Где значения параметров itemid_1...itemid_3 это id товаров, рекомендованых пользователю с запрашиваемым id.  
 При отсутствии информации сервер вернет json {'error': 'Not found'}.  
 
 
 Для проверки можно использовать команду  
-curl -u shop:password http://<HostIP>:5000/user/1  
+curl -u shop:password http://HostIP:5000/user/1  
 
 
 **Внимание! Для стабильной работы функции переобучения требуется не менее 64Гб оперативной памяти.**  
-По запросу POST http://<HostIP>:5000/relearning с передачей параметров {"command": "relearning", "password": 123, "parameters":   <parameters>} произойдет переобучение модели на данных имеющихся в папке .data при заданных параметрах.  
-При завершени обучения с ошибкой API вернет json с описанием ошибки {'result': <error_text>}  
+По запросу POST http://HostIP:5000/relearning с передачей параметров {"command": "relearning", "password": "password2", "parameters":   parameters} произойдет переобучение модели на данных имеющихся в папке .data при заданных параметрах.  
+При завершени обучения с ошибкой API вернет json с описанием ошибки {'result': "error_text"}  
 
 При неуспешной авторизации пользователя API вернет json {'error': 'Unauthorized access'}  
 
 
-Адрес http://<HostIP>::5000/metrics предназначен для съема метрик через Prometheus  
+Адрес http://HostIP::5000/metrics предназначен для съема метрик через Prometheus  
 metric_request_counter('requests', 'count of outer requests for prediction') - количество запросов пользователей;  
 metric_learning_counter('learning', 'count of outer requests for learning') - количество запусков переобучения;  
 metric_error_counter('error', 'count of errors in lerning') - количество ошибок при обучении;  
