@@ -23,7 +23,7 @@
 
 ### 2. Формат исходных данных
 
-[Исходные данные](http://example.com/https://drive.google.com/drive/folders/1_87paoN6Kll-oPM-pkbrkSqDj6UnzbNm?usp=sharing "Ссылка для скачивания данных")    
+[Исходные данные](https://drive.google.com/drive/folders/1_87paoN6Kll-oPM-pkbrkSqDj6UnzbNm?usp=sharing "Ссылка для скачивания данных")    
 
 Исходные данные предсталены четыремя фалами с набором данных:
 *events.csv* - набор событий
