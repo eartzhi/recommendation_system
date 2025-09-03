@@ -60,7 +60,7 @@
 
 ### 3. Построение валидации
 
-После получения датасета событий с целью создания валидационной выборки датафрейм был отсортирован по возрастанию параметра timestamp.   Тестовая выборка составляет 20% от датасета events. Разделение организовано по времени  
+После получения датасета событий с целью создания валидационной выборки датафрейм был отсортирован по возрастанию параметра timestamp.     Тестовая выборка составляет 20% от датасета events. Разделение организовано по времени  
 
 :arrow_up:[к оглавлению](#оглавление)
 
@@ -80,7 +80,7 @@
 
 Все признаки сведены в единый тренировочный датасет.
 
-тогом работы стали следующие датасеты:
+Итогом работы стали следующие датасеты:
 **items — признаки товара**   
 **Колонки:**  
 - *itemid* — идентификатор объекта 
@@ -288,9 +288,9 @@ path-путь к монтируемой папке на хост машине.
 
 По запросу GET http://HostIP:5000/user/<userid>  
 выдается ответ в формате json следующего содержания:   
-     'itemid_1': itemid,  
-     'itemid_2': itemid,  
-     'itemid_3': itemid
+     { "itemid_1": itemid,  
+     "itemid_2": itemid,  
+     "itemid_3": itemid }   
 Где значения параметров itemid_1...itemid_3 это id товаров, рекомендованых пользователю с запрашиваемым id.  
 При отсутствии информации сервер вернет json {'error': 'Not found'}.  
 
@@ -306,12 +306,12 @@ curl -u shop:password http://HostIP:5000/user/1
 При неуспешной авторизации пользователя API вернет json {'error': 'Unauthorized access'}  
 
 
-Адрес http://HostIP:5000/metrics предназначен для съема метрик через Prometheus  
-metric_request_counter('requests', 'count of outer requests for prediction') - количество запросов пользователей;  
-metric_learning_counter('learning', 'count of outer requests for learning') - количество запусков переобучения;  
-metric_error_counter('error', 'count of errors in lerning') - количество ошибок при обучении;  
-metric_request_time('request_processing_seconds', 'Time spent processing request') - время выполнения запроса;  
-metric_learning_time('learning_processing_seconds', 'Time spent learning request') - время выполнения переобучения.  
+Адрес http://HostIP:5000/metrics предназначен для съема следующих метрик через Prometheus:
+- metric_request_counter('requests', 'count of outer requests for prediction') - количество запросов пользователей;  
+- metric_learning_counter('learning', 'count of outer requests for learning') - количество запусков переобучения;  
+- metric_error_counter('error', 'count of errors in lerning') - количество ошибок при обучении;  
+- metric_request_time('request_processing_seconds', 'Time spent processing request') - время выполнения запроса;  
+- metric_learning_time('learning_processing_seconds', 'Time spent learning request') - время выполнения переобучения.  
 
 :arrow_up:[к оглавлению](#оглавление)
 
