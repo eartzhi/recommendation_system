@@ -287,7 +287,7 @@ path-путь к монтируемой папке на хост машине.
 
 ### 7. API
 
-По запросу GET http://HostIP:5000/user/<userid>  
+По запросу GET http://HostIP:5000/user/userid
 выдается ответ в формате json следующего содержания:   
 
      { "itemid_1": itemid,  
